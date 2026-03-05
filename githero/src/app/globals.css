@@ -92,3 +92,54 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
+/* ── Game UI Utilities ── */
+
+/* Dark game panel */
+.game-panel {
+  background: #0d0d16;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 10% 0%, rgba(255,255,255,0.03) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Game section label */
+.game-label {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Segmented bar glow pulse */
+@keyframes segment-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Badge unlock sparkle */
+@keyframes badge-pop {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  70% { transform: scale(1.15) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.badge-pop {
+  animation: badge-pop 0.4s ease-out forwards;
+}
+
+/* Chest lid flip helper */
+@keyframes chest-open {
+  from { transform: perspective(200px) rotateX(0deg); }
+  to   { transform: perspective(200px) rotateX(-110deg); }
+}
+

@@ -85,7 +85,7 @@ export default function Home() {
           <span className="text-xl">🦸</span>
           <span>GitHub Hero</span>
         </button>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <span className="text-xs text-white/30 font-mono hidden sm:block">powered by github api</span>
           <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
         </div>
@@ -104,7 +104,7 @@ export default function Home() {
             </motion.div>
           )}
           {phase === 'result' && result && (
-            <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-10">
+            <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-6">
               <ResultCard
                 user={result.user}
                 character={result.character}

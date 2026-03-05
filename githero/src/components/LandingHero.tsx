@@ -69,13 +69,17 @@ export default function LandingHero({ onSubmit, isLoading }: LandingHeroProps) {
         {/* Title */}
         <motion.div variants={itemVariants} className="space-y-3">
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white leading-[1.05] tracking-tight">
-            Find Your
-            <br />
+            <span className="block text-white/90">Code Hero</span>
             <span className="bg-gradient-to-r from-cyan-400 via-violet-400 to-pink-400 bg-clip-text text-transparent">
-              GitHub Hero
+              Analyzer
             </span>
           </h1>
-          <p className="text-white/45 text-base sm:text-lg max-w-md mx-auto leading-relaxed">
+          <div className="inline-block px-4 py-1.5 rounded-full border border-yellow-500/50 bg-yellow-500/10 mt-1">
+            <p className="text-yellow-300 font-black text-sm tracking-widest uppercase">
+              ⚡ Discover Your Developer Alter Ego!
+            </p>
+          </div>
+          <p className="text-white/40 text-base sm:text-lg max-w-md mx-auto leading-relaxed pt-1">
             Drop any GitHub username — we'll analyze your code, crunch the stats, and reveal which legendary hero you are.
           </p>
         </motion.div>
@@ -143,35 +147,6 @@ export default function LandingHero({ onSubmit, isLoading }: LandingHeroProps) {
           ))}
         </motion.div>
 
-        {/* Hero character grid */}
-        <motion.div variants={itemVariants} className="w-full">
-          <p className="text-[10px] text-white/20 tracking-[0.2em] uppercase mb-4">Which hero are you?</p>
-          <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
-            {HERO_CHARS.map((char, i) => (
-              <motion.div
-                key={char.emoji}
-                className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl border bg-white/[0.025] cursor-default"
-                style={{ borderColor: char.color + '30' }}
-                whileHover={{ scale: 1.08, borderColor: char.color + '80' }}
-                animate={{ y: [0, -4, 0] }}
-                transition={{ duration: 2.5 + i * 0.4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.2 }}
-              >
-                <span
-                  className="text-2xl"
-                  style={{ filter: `drop-shadow(0 0 6px ${char.color}88)` }}
-                >
-                  {char.emoji}
-                </span>
-                <span
-                  className="text-[9px] font-bold hidden sm:block tracking-wide"
-                  style={{ color: char.color + '99' }}
-                >
-                  {char.label}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
 
       </div>
     </motion.div>

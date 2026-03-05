@@ -10,6 +10,18 @@ interface ShareButtonProps {
   username: string;
 }
 
+async function srcToDataUrl(src: string): Promise<string> {
+  const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(src)}`;
+  const res = await fetch(proxyUrl);
+  const blob = await res.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
 export default function ShareButton({ cardRef, character, score, username }: ShareButtonProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
 
@@ -17,23 +29,47 @@ export default function ShareButton({ cardRef, character, score, username }: Sha
     setStatus('loading');
 
     try {
-      const html2canvas = (await import('html2canvas')).default;
-      const canvas = await html2canvas(cardRef.current!, {
-        backgroundColor: '#0a0a0f',
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: false,
+      const { toPng } = await import('html-to-image');
+      const el = cardRef.current!;
+
+      // Replace all cross-origin img srcs with data URLs to avoid canvas taint
+      const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
+      const origSrcs = imgs.map((img) => img.src);
+
+      await Promise.all(
+        imgs.map(async (img) => {
+          try {
+            if (img.src && img.src.startsWith('http')) {
+              img.src = await srcToDataUrl(img.src);
+            }
+          } catch {
+            // keep original src if proxy fails
+          }
+        })
+      );
+
+      const dataUrl = await toPng(el, {
+        cacheBust: true,
+        backgroundColor: '#0c0c16',
+        pixelRatio: 2,
+        skipFonts: false,
+        filter: (node) => node.tagName !== 'SCRIPT',
       });
 
-      const dataUrl = canvas.toDataURL('image/png');
+      // Restore original srcs
+      imgs.forEach((img, i) => { img.src = origSrcs[i]; });
+
       const link = document.createElement('a');
       link.download = `github-hero-${username}-${character.id}.png`;
       link.href = dataUrl;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+
       setStatus('done');
       setTimeout(() => setStatus('idle'), 3000);
-    } catch {
+    } catch (err) {
+      console.error('Share error:', err instanceof Error ? err.message : err);
       setStatus('error');
       setTimeout(() => setStatus('idle'), 3000);
     }
